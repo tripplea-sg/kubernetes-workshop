@@ -105,3 +105,27 @@ Edit configuration to make 3 MySQL
 kubectl -n mysql-cluster edit sts mysql
 ```
 3 MySQL will be running
+### Using MySQL Operator to deploy InnoDB Cluster
+Create a yaml with name mycluster.yaml
+```
+apiVersion: mysql.oracle.com/v2
+kind: InnoDBCluster
+metadata:
+  name: mycluster
+  namespace: mysql-cluster
+spec:
+  secretName: mypwds
+  tlsUseSelfSigned: true
+  instances: 3
+  router:
+    instances: 1
+```
+Apply mycluster.yaml to deploy 3 nodes cluster + 1 MySQL Router
+```
+kubectl apply -f mycluster.yaml
+```
+### Scaling Up
+Edit innodb cluster router replica from 1 to 2
+```
+kubectl -n mysql-cluster edit ic mycluster
+```
